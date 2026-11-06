@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Watt Club · HMO Battery Savings</title>
+<meta name="description" content="What a Watt Club battery would save your HMO: saving, battery size, cost, return and payback.">
+<meta property="og:title" content="The Watt Club · HMO Battery Savings">
+<meta property="og:description" content="Run your HMO on 8.5p electricity, all day.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow phone-first column; a 24-hour meter strip carries the idea, results sit in a single ledger card. */
+:root{
+  --bg:#F3F6F8; --surface:#FFFFFF; --ink:#0E2A47; --muted:#5A6B7D; --line:#D9E1E8;
+  --teal:#1A9C8C; --orange:#EE9A3A; --cheap:#1A9C8C; --dear:#C9D3DD; --hero:#0E2A47; --heroInk:#FFFFFF; --heroMuted:#AFC3D6;
+  --display:"Outfit",ui-sans-serif,system-ui,sans-serif; --body:"Figtree",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1726; --surface:#11233A; --ink:#EAF1F7; --muted:#9DB0C3; --line:#22394F;
+  --teal:#3CC3B1; --orange:#F2A955; --cheap:#3CC3B1; --dear:#2C4560; --hero:#0E2A47; --heroInk:#FFFFFF; --heroMuted:#AFC3D6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1726; --surface:#11233A; --ink:#EAF1F7; --muted:#9DB0C3; --line:#22394F;
+  --teal:#3CC3B1; --orange:#F2A955; --cheap:#3CC3B1; --dear:#2C4560; --hero:#0E2A47; --heroInk:#FFFFFF; --heroMuted:#AFC3D6; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:560px;margin:0 auto}
+header.band{background:var(--hero);color:var(--heroInk);padding-block:28px 32px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;letter-spacing:.08em;font-size:13px;text-transform:uppercase;color:var(--heroMuted)}
+.brand i{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--heroMuted);display:grid;place-items:center;font-style:normal;color:var(--orange)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,7vw,38px);line-height:1.1;margin:18px 0 10px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--orange)}
+.lede{color:var(--heroMuted);margin:0;max-width:44ch}
+.meter{margin-top:22px}
+.meter .bar{display:grid;grid-template-columns:repeat(48,1fr);gap:2px;height:30px}
+.meter .bar span{border-radius:2px;background:#2C4A69}
+.meter .bar span.c{background:var(--orange)}
+.meter .ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--heroMuted);margin-top:6px;font-variant-numeric:tabular-nums}
+.meter p{font-size:13px;color:var(--heroMuted);margin:8px 0 0}
+.meter p b{color:var(--orange);font-weight:600}
+main.band{padding-block:24px 40px}
+section{display:grid;gap:14px}
+label,.lab{font-weight:600;font-size:14px}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.presets button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer}
+.presets button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal);color:#fff}
+.presets button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.row{display:grid;gap:6px}
+.inline{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.val{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--teal)}
+input[type=number]{font:inherit;width:110px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.ledger{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.save{padding:20px;border-bottom:1px solid var(--line)}
+.save .k{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.save .big{font-family:var(--display);font-weight:700;font-size:clamp(40px,11vw,56px);line-height:1;color:var(--teal);font-variant-numeric:tabular-nums;margin-top:6px}
+.save .sub{color:var(--muted);margin-top:6px}
+.bills{display:grid;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.bills .b{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:10px;font-size:14px}
+.bills .track{height:12px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bills .fill{height:100%;border-radius:6px;transition:width .3s}
+.bills .fill.old{background:var(--dear)}
+.bills .fill.new{background:var(--teal)}
+dl{margin:0;display:grid;grid-template-columns:1fr 1fr}
+dl div{padding:14px 20px;border-bottom:1px solid var(--line)}
+dl div:nth-child(odd){border-right:1px solid var(--line)}
+dt{font-size:13px;color:var(--muted)}
+dd{margin:2px 0 0;font-family:var(--display);font-weight:600;font-size:20px;font-variant-numeric:tabular-nums}
+.cta{padding:18px 20px;display:grid;gap:8px}
+.cta a{display:inline-block;text-align:center;background:var(--orange);color:#1B1B1B;font-weight:600;text-decoration:none;padding:13px 18px;border-radius:999px}
+.cta p{margin:0;font-size:13px;color:var(--muted)}
+.notes{font-size:12.5px;color:var(--muted);margin-top:22px;display:grid;gap:6px}
+.notes p{margin:0}
+@media (prefers-reduced-motion:reduce){.bills .fill{transition:none}}
+
+body{margin:0}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="wrap">
+    <div class="brand"><i>⚡</i>The Watt Club</div>
+    <h1>Run your HMO on <em>8.5p</em> electricity, all day.</h1>
+    <p class="lede">A battery sized for the whole house, filled in the cheapest five hours of the night. See what it would save one of your properties.</p>
+    <div class="meter" aria-label="24-hour charging window">
+      <div class="bar" id="bar"></div>
+      <div class="ticks"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+      <p><b>00:30–05:30</b> battery charges at 8.5p · the rest of the day the house runs on it</p>
+    </div>
+  </div>
+</header>
+
+<main class="band">
+  <div class="wrap">
+    <section>
+      <div class="row">
+        <span class="lab" id="presetLabel">Property size</span>
+        <div class="presets" role="group" aria-labelledby="presetLabel" id="presets"></div>
+      </div>
+      <div class="row">
+        <div class="inline"><label for="kwh">Electricity use a year</label><span class="val" id="kwhOut"></span></div>
+        <input type="range" id="kwh" min="3000" max="15000" step="250" value="6000">
+        <p class="hint">On your bill or your supplier app. Move it to match your own property.</p>
+      </div>
+      <div class="row">
+        <div class="inline"><label for="rate">What you pay now (p per kWh)</label><input type="number" id="rate" min="10" max="60" step="0.01" value="26.32"></div>
+        <p class="hint">26.32p is the Ofgem price cap from 1 October 2026.</p>
+      </div>
+      <div class="row">
+        <div class="inline"><label for="rooms">Tenant rooms</label><input type="number" id="rooms" min="1" max="15" step="1" value="4"></div>
+      </div>
+    </section>
+
+    <div class="ledger" aria-live="polite">
+      <div class="save">
+        <div class="k">Estimated saving, year one</div>
+        <div class="big" id="saving">£0</div>
+        <div class="sub" id="perRoom"></div>
+      </div>
+      <div class="bills">
+        <div class="b"><span>Today</span><div class="track"><div class="fill old" id="oldBar"></div></div><span class="val" id="oldBill"></span></div>
+        <div class="b"><span>With battery</span><div class="track"><div class="fill new" id="newBar"></div></div><span class="val" id="newBill"></span></div>
+      </div>
+      <dl>
+        <div><dt>Battery size</dt><dd id="size"></dd></div>
+        <div><dt>Share of use covered</dt><dd id="cov"></dd></div>
+        <div><dt>Full cost incl. VAT and fees</dt><dd id="cost"></dd></div>
+        <div><dt>First-year return</dt><dd id="roi"></dd></div>
+        <div><dt>Simple payback</dt><dd id="pay"></dd></div>
+        <div><dt>15-year saving, net of cost</dt><dd id="net15"></dd></div>
+      </dl>
+      <div class="cta">
+        <a href="https://thewattclub.co.uk" target="_blank" rel="noopener">Get your Energy Plan · £195</a>
+        <p>£150 per property for portfolios of three or more. We simulate your own half-hourly data before we propose anything.</p>
+      </div>
+    </div>
+
+    <div class="notes">
+      <p><b>How this is worked out.</b> Battery charged on Octopus Go at 8.5p, or 9.44p after 10% storage losses. Use the battery cannot cover is bought at about 27p. Standing charge unchanged. Battery sized at 1.3 times daily use, rounded to 5 kWh. Cost uses our target supply price of £150/kWh, 5% VAT on the installation and 20% on our fees.</p>
+      <p>The 15-year figure allows 2% capacity loss a year and an inverter replacement in year 12. These are estimates from The Watt Club Business Plan 2027–2031. Your Energy Plan replaces them with your own figures.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const presets=[["3-bed",4500,3],["4-bed",6000,4],["5-bed",7000,5],["6-bed",8000,6],["8-bed",10000,8]];
+  const $=id=>document.getElementById(id);
+  const gbp=n=>"£"+Math.round(n).toLocaleString("en-GB");
+  const bar=$("bar");
+  for(let i=0;i<48;i++){const s=document.createElement("span");if(i>=1&&i<11)s.className="c";bar.appendChild(s);}
+  const pw=$("presets");
+  presets.forEach(([name,k,r])=>{const b=document.createElement("button");b.type="button";b.textContent=name+" HMO";b.dataset.k=k;b.dataset.r=r;
+    b.addEventListener("click",()=>{$("kwh").value=k;$("rooms").value=r;calc();});pw.appendChild(b);});
+  function calc(){
+    const kwh=+$("kwh").value, rate=Math.max(1,+$("rate").value||26.32), rooms=Math.max(1,Math.round(+$("rooms").value||1));
+    const B=Math.max(10,Math.min(60,Math.round(kwh/365*1.3/5)*5));
+    const cov=Math.min(.96,Math.max(.88,.92+.003*(B-20)));
+    const oldB=Math.round(kwh*rate/100), newB=Math.round(kwh*cov*.0944+kwh*(1-cov)*.27), s=oldB-newB;
+    const cost=8592+255.5*(B-20);
+    let tot=0;for(let y=0;y<15;y++){tot+=s*Math.pow(.98,y);} const net=tot-cost-1300*1.05;
+    $("kwhOut").textContent=kwh.toLocaleString("en-GB")+" kWh";
+    $("saving").textContent=gbp(s);
+    $("perRoom").textContent="About "+gbp(s/rooms/12)+" a month per room, across "+rooms+" room"+(rooms>1?"s":"");
+    $("oldBill").textContent=gbp(oldB); $("newBill").textContent=gbp(newB);
+    $("oldBar").style.width="100%"; $("newBar").style.width=Math.max(4,newB/oldB*100)+"%";
+    $("size").textContent=B+" kWh"; $("cov").textContent=Math.round(cov*100)+"%";
+    $("cost").textContent=gbp(cost); $("roi").textContent=(s/cost*100).toFixed(1)+"%";
+    $("pay").textContent=s>0?(cost/s).toFixed(1)+" years":"—"; $("net15").textContent=gbp(net);
+    pw.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.k===kwh?"true":"false"));
+  }
+  ["kwh","rate","rooms"].forEach(id=>$(id).addEventListener("input",calc));
+  calc();
+})();
+</script>
+
+</body>
+</html>
