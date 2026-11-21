@@ -66,7 +66,8 @@ input[type=number]{font:inherit;width:110px;padding:8px 10px;border:1.5px solid 
 .save .big{font-family:var(--display);font-weight:700;font-size:clamp(40px,11vw,56px);line-height:1;color:var(--teal);font-variant-numeric:tabular-nums;margin-top:6px}
 .save .sub{color:var(--muted);margin-top:6px}
 .bills{display:grid;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}
-.bills .b{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:10px;font-size:14px}
+.bills .b{display:grid;grid-template-columns:96px 1fr 64px;align-items:center;gap:10px;font-size:14px}
+.bills .b .val{text-align:right}
 .bills .track{height:12px;background:var(--bg);border-radius:6px;overflow:hidden}
 .bills .fill{height:100%;border-radius:6px;transition:width .3s}
 .bills .fill.old{background:var(--dear)}
@@ -143,7 +144,7 @@ body{margin:0}
     </div>
 
     <div class="notes">
-      <p><b>How this is worked out.</b> Battery charged on Octopus Go at 8.5p, or 9.44p after 10% storage losses. Use the battery cannot cover is bought at about 27p. Standing charge unchanged. Battery sized at 1.3 times daily use, rounded to 5 kWh. House sizes assume about 1,030 kWh a year per room, the average of four real 6-bed HMOs in Peterborough (their suppliers' own annual estimates). Cost uses our target supply price of £150/kWh, 5% VAT on the installation and 20% on our fees.</p>
+      <p><b>How this is worked out.</b> Battery charged on Octopus Go at 8.5p, or 9.44p after 10% storage losses. Use the battery cannot cover is bought at about 27p. Standing charge unchanged. Battery sized for a winter day: 1.3 times average daily use (the winter-to-average ratio across four real HMOs), plus a 10% reserve, rounded up to whole 5 kWh modules. Sized that way it carries about 95% of the year's use. House sizes assume about 1,030 kWh a year per room, the average of four real 6-bed HMOs in Peterborough (their suppliers' own annual estimates). Cost uses our target supply price of £150/kWh, 5% VAT on the installation and 20% on our fees.</p>
       <p>The 15-year figure allows 2% capacity loss a year and an inverter replacement in year 12. These are estimates from The Watt Club Business Plan 2027–2031. Your Energy Plan replaces them with your own figures.</p>
     </div>
   </div>
@@ -168,8 +169,10 @@ body{margin:0}
     b.addEventListener("click",()=>{$("kwh").value=k;rooms=r;calc();});pw.appendChild(b);});
   function calc(){
     const kwh=+$("kwh").value, rate=RATE;
-    const B=Math.max(10,Math.min(60,Math.round(kwh/365*1.3/5)*5));
-    const cov=Math.min(.96,Math.max(.88,.92+.003*(B-20)));
+    // Size for a winter day (1.3 x average daily use), keep a 10% reserve, round UP to whole 5 kWh modules.
+    const B=Math.max(10,Math.min(60,Math.ceil(kwh/365*1.3/0.9/5)*5));
+    // Sized that way, the battery carries about 95% of the year's use; cold snaps and power peaks come from the grid.
+    const cov=.95;
     const oldB=Math.round(kwh*rate/100), newB=Math.round(kwh*cov*.0944+kwh*(1-cov)*.27), s=oldB-newB;
     const cost=8592+255.5*(B-20);
     let tot=0;for(let y=0;y<15;y++){tot+=s*Math.pow(.98,y);} const net=tot-cost-1300*1.05;
@@ -177,7 +180,9 @@ body{margin:0}
     $("saving").textContent=gbp(s);
     $("perRoom").textContent="About "+gbp(s/rooms/12)+" a month per room, across "+rooms+" rooms";
     $("oldBill").textContent=gbp(oldB); $("newBill").textContent=gbp(newB);
-    $("oldBar").style.width="100%"; $("newBar").style.width=Math.max(4,newB/oldB*100)+"%";
+    // One fixed £ scale for every house (the bill at the top of the slider), so bigger bills draw longer bars.
+    const SCALE=+$("kwh").max*RATE/100;
+    $("oldBar").style.width=Math.max(2,oldB/SCALE*100)+"%"; $("newBar").style.width=Math.max(2,newB/SCALE*100)+"%";
     $("size").textContent=B+" kWh"; $("cov").textContent=Math.round(cov*100)+"%";
     $("cost").textContent=gbp(cost); $("roi").textContent=(s/cost*100).toFixed(1)+"%";
     $("pay").textContent=s>0?(cost/s).toFixed(1)+" years":"—"; $("net15").textContent=gbp(net);
