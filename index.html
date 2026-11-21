@@ -6,7 +6,7 @@
 <title>The Watt Club · HMO Battery Savings</title>
 <meta name="description" content="What a Watt Club battery would save your HMO: saving, battery size, cost, return and payback.">
 <meta property="og:title" content="The Watt Club · HMO Battery Savings">
-<meta property="og:description" content="Run your HMO on 8.5p electricity, all day.">
+<meta property="og:description" content="Run your HMO on 9.4p electricity, all day.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -42,10 +42,18 @@ h1 em{font-style:normal;color:var(--orange)}
 main.band{padding-block:24px 40px}
 section{display:grid;gap:14px}
 label,.lab{font-weight:600;font-size:14px}
-.presets{display:flex;flex-wrap:wrap;gap:8px}
-.presets button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer}
+.presets{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (max-width:359px){.presets{grid-template-columns:repeat(3,1fr)}}
+.presets button{font:inherit;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 4px 8px;border-radius:12px;cursor:pointer;
+  display:grid;justify-items:center;gap:4px;min-height:84px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.presets button svg{width:34px;height:30px;color:var(--muted)}
+.presets button b{font-family:var(--display);font-weight:600;font-size:15px;line-height:1}
+.presets button small{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1}
 .presets button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal);color:#fff}
+.presets button[aria-pressed="true"] svg,.presets button[aria-pressed="true"] small{color:#fff}
 .presets button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.fixed{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:12px 14px;border:1px dashed var(--line);border-radius:10px;font-size:14px}
+.fixed span:first-child{color:var(--muted)}
 .row{display:grid;gap:6px}
 .inline{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .val{font-family:var(--display);font-weight:600;font-variant-numeric:tabular-nums}
@@ -83,12 +91,12 @@ body{margin:0}
 <header class="band">
   <div class="wrap">
     <div class="brand"><i>⚡</i>The Watt Club</div>
-    <h1>Run your HMO on <em>8.5p</em> electricity, all day.</h1>
+    <h1>Run your HMO on <em>9.4p</em> electricity, all day.</h1>
     <p class="lede">A battery sized for the whole house, filled in the cheapest five hours of the night. See what it would save one of your properties.</p>
     <div class="meter" aria-label="24-hour charging window">
       <div class="bar" id="bar"></div>
       <div class="ticks"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
-      <p><b>00:30–05:30</b> battery charges at 8.5p · the rest of the day the house runs on it</p>
+      <p><b>00:30–05:30</b> the battery fills at 9.4p a unit, losses included · the rest of the day the house runs on it</p>
     </div>
   </div>
 </header>
@@ -97,20 +105,16 @@ body{margin:0}
   <div class="wrap">
     <section>
       <div class="row">
-        <span class="lab" id="presetLabel">Property size</span>
+        <span class="lab" id="presetLabel">1. Pick a house</span>
         <div class="presets" role="group" aria-labelledby="presetLabel" id="presets"></div>
       </div>
       <div class="row">
-        <div class="inline"><label for="kwh">Electricity use a year</label><span class="val" id="kwhOut"></span></div>
-        <input type="range" id="kwh" min="3000" max="15000" step="250" value="6000">
-        <p class="hint">On your bill or your supplier app. Move it to match your own property.</p>
+        <div class="inline"><label for="kwh">2. Yearly electricity use</label><span class="val" id="kwhOut"></span></div>
+        <input type="range" id="kwh" min="2000" max="15000" step="250" value="6250">
+        <p class="hint">Move it to match your own house. It's on your bill or supplier app, often as "estimated annual usage".</p>
       </div>
-      <div class="row">
-        <div class="inline"><label for="rate">What you pay now (p per kWh)</label><input type="number" id="rate" min="10" max="60" step="0.01" value="26.32"></div>
-        <p class="hint">26.32p is the Ofgem price cap from 1 October 2026.</p>
-      </div>
-      <div class="row">
-        <div class="inline"><label for="rooms">Tenant rooms</label><input type="number" id="rooms" min="1" max="15" step="1" value="4"></div>
+      <div class="fixed" aria-label="Fixed assumption">
+        <span>Price you pay now</span><span class="val">26.32p per kWh · Ofgem price cap, 1 Oct 2026</span>
       </div>
     </section>
 
@@ -139,7 +143,7 @@ body{margin:0}
     </div>
 
     <div class="notes">
-      <p><b>How this is worked out.</b> Battery charged on Octopus Go at 8.5p, or 9.44p after 10% storage losses. Use the battery cannot cover is bought at about 27p. Standing charge unchanged. Battery sized at 1.3 times daily use, rounded to 5 kWh. Cost uses our target supply price of £150/kWh, 5% VAT on the installation and 20% on our fees.</p>
+      <p><b>How this is worked out.</b> Battery charged on Octopus Go at 8.5p, or 9.44p after 10% storage losses. Use the battery cannot cover is bought at about 27p. Standing charge unchanged. Battery sized at 1.3 times daily use, rounded to 5 kWh. House sizes assume about 1,030 kWh a year per room, the average of four real 6-bed HMOs in Peterborough (their suppliers' own annual estimates). Cost uses our target supply price of £150/kWh, 5% VAT on the installation and 20% on our fees.</p>
       <p>The 15-year figure allows 2% capacity loss a year and an inverter replacement in year 12. These are estimates from The Watt Club Business Plan 2027–2031. Your Energy Plan replaces them with your own figures.</p>
     </div>
   </div>
@@ -147,16 +151,23 @@ body{margin:0}
 
 <script>
 (function(){
-  const presets=[["3-bed",4500,3],["4-bed",6000,4],["5-bed",7000,5],["6-bed",8000,6],["8-bed",10000,8]];
+  // Only two things can change: the house (sets usage and rooms) and the usage slider. Price is fixed.
+  const RATE=26.32;
+  // Yearly use per house size: ~1,030 kWh per room, the average of four real 6-bed HMOs (suppliers' own annual estimates).
+  const presets=[["3-bed",3000,3],["4-bed",4250,4],["5-bed",5250,5],["6-bed",6250,6],["8-bed",8250,8]];
   const $=id=>document.getElementById(id);
-  const gbp=n=>"£"+Math.round(n).toLocaleString("en-GB");
+  const gbp=n=>(n<0?"−£":"£")+Math.abs(Math.round(n)).toLocaleString("en-GB");
   const bar=$("bar");
   for(let i=0;i<48;i++){const s=document.createElement("span");if(i>=1&&i<11)s.className="c";bar.appendChild(s);}
+  const house='<svg viewBox="0 0 34 30" aria-hidden="true"><path d="M3 14 17 3l14 11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M7 12v15h20V12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><rect x="14" y="18" width="6" height="9" rx="1" fill="currentColor"/></svg>';
+  let rooms=6;
   const pw=$("presets");
-  presets.forEach(([name,k,r])=>{const b=document.createElement("button");b.type="button";b.textContent=name+" HMO";b.dataset.k=k;b.dataset.r=r;
-    b.addEventListener("click",()=>{$("kwh").value=k;$("rooms").value=r;calc();});pw.appendChild(b);});
+  presets.forEach(([name,k,r])=>{const b=document.createElement("button");b.type="button";b.dataset.k=k;b.dataset.r=r;
+    b.setAttribute("aria-label",name+" HMO, about "+k.toLocaleString("en-GB")+" kWh a year");
+    b.innerHTML=house+"<b>"+name+"</b><small>"+(k/1000).toLocaleString("en-GB")+"k kWh</small>";
+    b.addEventListener("click",()=>{$("kwh").value=k;rooms=r;calc();});pw.appendChild(b);});
   function calc(){
-    const kwh=+$("kwh").value, rate=Math.max(1,+$("rate").value||26.32), rooms=Math.max(1,Math.round(+$("rooms").value||1));
+    const kwh=+$("kwh").value, rate=RATE;
     const B=Math.max(10,Math.min(60,Math.round(kwh/365*1.3/5)*5));
     const cov=Math.min(.96,Math.max(.88,.92+.003*(B-20)));
     const oldB=Math.round(kwh*rate/100), newB=Math.round(kwh*cov*.0944+kwh*(1-cov)*.27), s=oldB-newB;
@@ -164,7 +175,7 @@ body{margin:0}
     let tot=0;for(let y=0;y<15;y++){tot+=s*Math.pow(.98,y);} const net=tot-cost-1300*1.05;
     $("kwhOut").textContent=kwh.toLocaleString("en-GB")+" kWh";
     $("saving").textContent=gbp(s);
-    $("perRoom").textContent="About "+gbp(s/rooms/12)+" a month per room, across "+rooms+" room"+(rooms>1?"s":"");
+    $("perRoom").textContent="About "+gbp(s/rooms/12)+" a month per room, across "+rooms+" rooms";
     $("oldBill").textContent=gbp(oldB); $("newBill").textContent=gbp(newB);
     $("oldBar").style.width="100%"; $("newBar").style.width=Math.max(4,newB/oldB*100)+"%";
     $("size").textContent=B+" kWh"; $("cov").textContent=Math.round(cov*100)+"%";
@@ -172,7 +183,7 @@ body{margin:0}
     $("pay").textContent=s>0?(cost/s).toFixed(1)+" years":"—"; $("net15").textContent=gbp(net);
     pw.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.k===kwh?"true":"false"));
   }
-  ["kwh","rate","rooms"].forEach(id=>$(id).addEventListener("input",calc));
+  $("kwh").addEventListener("input",calc);
   calc();
 })();
 </script>
